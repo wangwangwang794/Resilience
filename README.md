@@ -3,4 +3,7 @@ This repository contains the MATLAB implementation code of the results presented
 
 # Installation 
 ### Step 1. 
-Install the supporting open-source MATLAB libaries: PSAT (http://faraday1.ucd.ie/psat.html), CVX (http://cvxr.com/cvx/download/) and SOSTOOLS (https://www.cds.caltech.edu/sostools/). The installation instruction of these dependencies can be found in their respective user manual available in the links.
+Install the supporting open-source MATLAB libaries: PSAT (http://faraday1.ucd.ie/psat.html), CVX (http://cvxr.com/cvx/download/) and SOSTOOLS (https://www.cds.caltech.edu/sostools/). The installation instruction for these dependencies can be found in their respective user-manual available in the provided links. Make sure to check whether those are working fine.
+
+### Step 2.
+
