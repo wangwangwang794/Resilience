@@ -16,6 +16,6 @@ For running the tool, just open and run the 'main.m' file. Path for this reposit
 
 Contact me (talukder@iastate.edu) if any installation-issue is encountered.
 
-#Note
+# Note
 This tool is tested in Windows 10 with MATLAB 2019a. The tool first generates a consolidated list of all possible length-l contingencies which is saved in a MATLAB data file named 'eventlist' in the parent folder. The final results (with the list of contingencies with their corresponding resilience measures) are saved in a .csv file named 'resilience'.
 
