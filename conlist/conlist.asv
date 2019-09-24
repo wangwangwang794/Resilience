@@ -1,0 +1,186 @@
+clear 
+clc
+
+global buscon linecon syncon pvcon swcon pqcon faultcomp_tot faulttype_tot
+global Bus Line PQ PV SW Syn
+
+psatpath = 'C:\Uploaded_data\PHD\Research\Resilience of PS\R13\Codes\psat_original';
+datadir = 'C:\Uploaded_data\PHD\Research\Resilience of PS\R13\Codes';
+addpath(psatpath)
+initpsat
+runpsat('data_sens.m',datadir,'data')
+runpsat('pf')
+
+buscon = Bus.con;
+linecon = Line.con;
+syncon = Syn.con;
+pvcon = PV.store;
+swcon = SW.store;
+pqcon = PQ.con;
+
+con_depth = 2;
+
+p = [0.05 0.75 0.1 0.1];
+
+[buses,nislands] = getcomp()
+if nislands > 1
+    fprintf('\nOriginal topology is not connected, aborting resilience computation\n')
+    return
+end
+
+k = 0;
+leaf = 0;
+level = 0;
+base = 0;
+load_parent = 0;
+load_island = 0;
+blckout = 0;
+top_no = 1;
+island_to_vst = 0;
+inisland = 0;
+load_loss = 0;
+event = {};
+checkisland = 0;
+wrngid = [];
+
+while (1)
+    while (1)    
+        if ((nislands == 1))
+            get_topology
+            check_leaf
+            get_sep
+            tplgy.leaf = leaf;
+            tplgy.base = base;
+            tplgy.level = level;
+            tplgy.island = [];
+            if isempty(event)
+                tplgy.load_loss = 0;
+            else
+                tplgy.load_loss = event{base}.load_loss + load_loss;
+            end
+            tplgy.faultcomp_tot = faultcomp_tot;
+            tplgy.faulttype_tot = faulttype_tot;
+            tplgy.act = act;
+            if top_no > 1
+                tplgy.faultcomp = faultcomp;
+                tplgy.faulttype = faulttype;
+                tplgy.prob = prob;
+                tplgy.act_tot = event{base}.act_tot;
+            else
+                tplgy.act_tot = zeros(1,4);
+            end
+            tplgy.k = k;
+            tplgy.delta0 = delta0;
+            tplgy.omega0 = omega0;
+            tplgy.island = 0;
+            event{top_no} = tplgy;
+        elseif ((nislands > 1))
+            inisland = 1;
+            backdata
+            tmp_buses = buses;
+            actb_tot = 0; actl_tot = 0; actt_tot = 0; actg_tot = 0;
+            for ii = 1:nislands 
+%                 fprintf('In con_list\n')
+%                 leaf = leaf
+                retdata
+                updt_topology
+                get_topology
+%                 tplgy.bus
+%                 tplgy.line
+%                 tplgy.pq
+%                 tplgy.pv
+%                 tplgy.sw
+%                 tplgy.syn
+                check_leaf
+                get_sep
+                tplgy.leaf = leaf
+                tplgy.base = base;
+                tplgy.level = level;
+                tplgy.island = ii;
+                tplgy.load_loss = event{base}.load_loss + load_loss;
+                tplgy.faultcomp_tot = faultcomp_tot;
+                tplgy.faulttype_tot = faulttype_tot;
+                tplgy.act = act;
+                if top_no > 1
+                    tplgy.faultcomp = faultcomp;
+                    tplgy.faulttype = faulttype;
+                    tplgy.prob = prob;
+                    tplgy.act_tot = event{base}.act_tot + act_tot;
+                else
+                    tplgy.act_tot = zeros(1,4);
+                end
+                tplgy.k = k;
+                tplgy.delta0 = delta0;
+                tplgy.omega0 = omega0;
+                event{top_no} = tplgy;
+                top_no = top_no + 1
+                buses = tmp_buses;
+                blck_out(ii) = blckout
+                blckout = 0
+%                 leaf = 0;
+            end
+
+            delid = 0;
+            for hh = 1:ii
+                event{top_no - hh}.load_loss = event{base}.load_loss + load_loss;
+                event{top_no - hh}.k = k;
+%                 event{top_no - hh}.leaf = leaf;
+                event{top_no - hh}.act_tot = event{event{top_no - hh}.base}.act_tot + act_tot - event{top_no - hh}.act;
+                if blck_out(ii - hh + 1) == 1
+                    event{top_no - hh} = {};
+                    event = event(~cellfun('isempty',event));
+                    delid = delid + 1;
+                end
+            end
+            top_no = length(event);
+            load_loss = 0;
+            inisland = 0;
+            clear blck_out
+        end
+        
+        allpq = [];
+        for pq = 1:length(event)
+            if event{pq}.level <= con_depth - 1
+                allpq = [allpq pq];
+            end
+        end
+        stop = 1;
+        for rs = 1:length(allpq)
+            if ~isempty(event{allpq(rs)}.faultcomp_tot)
+                stop = 0;
+            end
+        end
+        if stop == 1
+            break
+        end
+%         if isempty(event{1}.faultcomp_tot)
+%             break
+%         end
+        if leaf == 1
+            call_parent
+            if checkisland == 1
+                checkisland = 0;
+                break
+            else
+                leaf = 0;
+            end
+        end
+        apply_fault 
+    end
+    for ff = 1:length(event)
+        island_id = length(event) - ff + 1;
+        if ~(event{island_id}.island == 0)&&(event{island_id}.leaf == 0) 
+            island_to_vst = 1;            
+            break
+        end
+    end
+    if island_to_vst == 0
+        break
+    else
+        call_island        
+        apply_fault
+        event{island_id}.island = 0;
+    end
+end
+
+rmpath()

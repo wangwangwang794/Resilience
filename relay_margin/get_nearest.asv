@@ -1,0 +1,83 @@
+function [start,min_dist] = get_nearest(points, line_id, pp)
+
+global Line
+
+start = 1;
+z_line = Line.con(line_id,8) + 1j*Line.con(line_id,9);
+zone_z = 2*z_line;
+mho_center = zone_z/2;
+a = abs(zone_z/2);
+c = [real(mho_center); imag(mho_center)];
+
+if pp == 2
+    points = points*0.15;
+end
+
+for i = 1:length(points(1,:))
+    p = points(:,i);
+    if norm(p-c) <= a
+        start = Inf;
+        min_dist = 0;
+        return
+    end
+    if isinf(p)
+        dist(i) = Inf;
+        continue
+    end
+    cvx_begin quiet
+        variable x(2)
+        minimize(norm(x-p));
+        subject to 
+            norm(x-c)<=a;
+    cvx_end
+    dist(i) = cvx_optval;
+    minimizer(i,:) = x;
+end
+
+min_dist = min(dist);
+
+if pp == 2
+    id = find(dist == min_dist);
+    fprintf('The optimizer is:\n')
+    fprintf(num2str(minimizer(id,:)));
+    aa = minimizer(id,:);
+    fprintf('The trajectory point is:\n')
+    b = points(:,id)';
+    b
+%     fprintf(num2str());
+end
+
+if pp == 2
+    figure(1)
+%     axis([-0.4 0.4 -0.4 0.4])
+hold on 
+
+set(gca,'FontSize',19,'TickLabelInterpreter', 'latex','FontSize',16)
+
+plot(points(:,1),points(:,2))    
+xc = real(mho_center);
+yc = imag(mho_center);
+
+th = 0:pi/50:2*pi;
+xunit = a * cos(th) + xc;
+yunit = a * sin(th) + yc;
+plot(xunit, yunit,'k--');
+
+% x = linspace(0,2.5*Line.con(1,8),5);
+% y = linspace(0,2.5*Line.con(1,9),5);
+% plot(x,y,'k--o')
+% h4=legend('Pre-fault equilibrium','During fault','Post-clearance','Relay operating circles')
+% set(h4, 'Interpreter', 'latex');
+% % legend('Pre-fault equilibrium','During fault','Post-clearance','Relay operating circles','Interpreter','latex')
+% xlabel('Resistance','Interpreter','latex')
+% ylabel('Reactance','Interpreter','latex')
+% text(0.27,0.15,'RM','Interpreter','latex','FontSize',16,'Color','k')
+
+x = [0.5+aa(1),0.5+b(1)];
+y = [0+aa(2),0+b(2)];
+a = annotation('doublearrow',x,y);
+
+hold off
+    
+end
+    
