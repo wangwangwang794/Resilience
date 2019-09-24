@@ -3,7 +3,7 @@ This repository contains the MATLAB implementation code of the results presented
 
 # Installation 
 ### Step 1. 
-Install the supporting open-source MATLAB libaries: PSAT (http://faraday1.ucd.ie/psat.html), CVX (http://cvxr.com/cvx/download/), SOSTOOLS (https://www.cds.caltech.edu/sostools/) and SeDumi (http://sedumi.ie.lehigh.edu/?page_id=58). Note that CVX needs to be separately installed (follow the user-guide in the provided link), while the other dependencies can be downloaded and their respective directories can be added to MATLAB path. Make sure the path of all these tools are added to MATLAB path file.  
+Install the supporting open-source MATLAB libaries: PSAT (http://faraday1.ucd.ie/psat.html), CVX (http://cvxr.com/cvx/download/), SOSTOOLS (https://www.cds.caltech.edu/sostools/) and SeDumi (http://sedumi.ie.lehigh.edu/?page_id=58). Note that CVX needs to be separately installed (follow the user-guide in the provided link), while the other dependencies can be downloaded and their respective directories can be added to MATLAB path. Although CVX includes a SeDuMi package, SeDuMi needs to be separately downloaded from the link provided, for SOSTOOLS to work. Make sure the path of all these tools are added to MATLAB path file.  
 
 ### Step 2.
 Clone/download this repository.
@@ -14,5 +14,5 @@ The power-system network data is provided by user through the file 'data.m', whi
 ### Step 4.
 For running the tool, just open and run the 'main.m' file. Path for this repository need not be added by the user. It is done automatically by the tool.
 
-Contact me (talukder@iastate.edu) if any issue in installation is encountered.
+Contact me (talukder@iastate.edu) if any installation-issue is encountered.
 
