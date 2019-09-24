@@ -14,7 +14,7 @@ end
 
 addpath(psatpath)
 initpsat
-runpsat('data_sens.m',pwd,'data')
+runpsat('data.m',pwd,'data')
 runpsat_rev_con('pf')
 event{im}.delta0 = DAE.x(Syn.delta);
 event{im}.omega0 = DAE.x(Syn.omega);
