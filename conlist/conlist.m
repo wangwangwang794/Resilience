@@ -3,7 +3,6 @@ function conlist(datadir, p, con_depth)
 global buscon linecon syncon pvcon swcon pqcon faultcomp_tot faulttype_tot
 global Bus Line PQ PV SW Syn psatpath
 
-addpath(psatpath)
 initpsat
 psatpath = Path.psat;
 runpsat('data.m',datadir,'data')

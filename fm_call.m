@@ -27,24 +27,20 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
 
  case 'load'
 
   gcall(PQ)
-  gcall(Fault)
   gisland(Bus)
 
  case 'gen0'
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
 
  case 'load0'
 
   gcall(PQ)
-  gcall(Fault)
   gisland(Bus)
 
  case '3'
@@ -55,7 +51,6 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   Syn = gcall(Syn);
   PV = gcall(PV);
   SW = gcall(SW);
@@ -81,7 +76,6 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
@@ -90,13 +84,11 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
-  Gycall(Fault)
   Gycall(PV)
   Gycall(SW)
   Gyisland(Bus)
@@ -113,12 +105,10 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   Syn = gcall(Syn);
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
-  Gycall(Fault)
   Syn = Gycall(Syn);
   Gyisland(Bus)
 
@@ -135,14 +125,12 @@ switch flag
   global PV SW
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   PV = gcall(PV);
   greactive(SW)
   glambda(SW,1,DAE.kg)
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
-  Gycall(Fault)
   Gycall(PV)
   Gyreactive(SW)
   Gyisland(Bus)
@@ -157,14 +145,12 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   Syn = gcall(Syn);
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
-  Gycall(Fault)
   Syn = Gycall(Syn);
   Gycall(PV)
   Gycall(SW)
@@ -175,14 +161,12 @@ switch flag
 
   Line = gcall(Line);
   gcall(PQ)
-  gcall(Fault)
   Syn = gcall(Syn);
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
-  Gycall(Fault)
   Syn = Gycall(Syn);
   Gycall(PV)
   Gycall(SW)
